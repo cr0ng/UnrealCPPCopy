@@ -22,10 +22,26 @@ void ATestActor::BeginPlay()
 	UE_LOG(LogTemp, Error, TEXT("Hello Unreal. 한글도 됨. 에러 로그."));
 }
 
+void ATestActor::Test_NormalFunction()
+{
+	UE_LOG(LogTemp, Log, TEXT("Test_NormalFunction 호출"));
+}
+
+void ATestActor::Test_UFunction()
+{
+	UE_LOG(LogTemp, Log, TEXT("Test_UFunction 호출"));
+}
+
+// Test_NativeEventFunction의 구현은 _Implementation를 붙여야 한다.
+void ATestActor::Test_NativeEventFunction_Implementation()
+{
+	UE_LOG(LogTemp, Log, TEXT("Test_NativeEventFunction 호출"));
+}
+
 // Called every frame
 void ATestActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	// Test_NativeEventFunction(); C++에서 호출은 _Implementation 안붙인 이름 사용
 }
 
