@@ -21,6 +21,9 @@ AFloatingActor::AFloatingActor()
 void AFloatingActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//BodyMesh->SetRelativeLocation(FVector(0,0,100));
+	//BodyMesh->AddRelativeLocation
 	
 }
 
@@ -29,5 +32,6 @@ void AFloatingActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	BodyMesh->AddRelativeLocation(DeltaTime * Speed * FVector::UpVector );
 }
 
