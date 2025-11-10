@@ -8,8 +8,6 @@
 #include "ActionCharacter.generated.h"
 
 class UInputAction;
-class USpringArmComponent;
-class UCameraComponent;
 
 UCLASS()
 class KI_UNREALCPP_API AActionCharacter : public ACharacter
@@ -44,5 +42,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_Move;
+
+
 	
 };
