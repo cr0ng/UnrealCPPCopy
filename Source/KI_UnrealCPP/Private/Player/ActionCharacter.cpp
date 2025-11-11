@@ -139,7 +139,9 @@ void AActionCharacter::SetStamina(float deltaTime)
 	}
 	else 
 	{
-		CurrentStamina += IncreaseStamina * deltaTime;
+		if (CurrentStamina < MaxStamina) {
+			CurrentStamina += IncreaseStamina * deltaTime;
+		}
 		UE_LOG(LogTemp, Warning, TEXT("스테미나 회복중: (%.1f)"), CurrentStamina);
 		if (CurrentStamina > MaxStamina)
 		{
