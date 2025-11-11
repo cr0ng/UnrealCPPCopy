@@ -6,6 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
+#include "TimerManager.h"
 
 // Sets default values
 AActionCharacter::AActionCharacter()
@@ -34,12 +35,15 @@ void AActionCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	AnimInstance = GetMesh()->GetAnimInstance();	// ABP 객체 가져오기
+	CurrentStamina = MaxStamina;
 }
 
 // Called every frame
 void AActionCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	SetStamina(DeltaTime);
 
 }
 
@@ -94,8 +98,14 @@ void AActionCharacter::OnRollInput(const FInputActionValue& InValue)
 	{
 		if (!AnimInstance->IsAnyMontagePlaying())
 		{
-			SetActorRotation(GetLastMovementInputVector().Rotation());
-			PlayAnimMontage(RollMontage);
+			//if (GetLastMovementInputVector().IsNearlyZero())	// 입력을 하는 중에만 즉시 회전
+			//{
+			//	SetActorRotation(GetLastMovementInputVector().Rotation());	// 마지막 입력 방향으로 즉시 회전 시키기
+			//}
+			if (CurrentStamina > 0.0f) {
+				PlayAnimMontage(RollMontage);
+				CurrentStamina -= DecreaseRollStamina;
+			}
 		}
 	}
 }
@@ -103,12 +113,38 @@ void AActionCharacter::OnRollInput(const FInputActionValue& InValue)
 void AActionCharacter::SetSprintMode()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("달리기 모드"));
+	BIsSprint = true;
 	GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+	
 }
 
 void AActionCharacter::SetWalkMode()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("걷기 모드"));
+	BIsSprint = false;
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
+void AActionCharacter::SetStamina(float deltaTime)
+{
+	if (BIsSprint) {
+		CurrentStamina -= DecreaseSprintStamina * deltaTime;
+		UE_LOG(LogTemp, Warning, TEXT("남은 스테미나 : (%.1f)"), CurrentStamina);
+		
+		if (CurrentStamina <= 0.0f)
+		{
+			CurrentStamina = 0.0f;
+			SetWalkMode(); // 스테미나 없으면 걷기로 전환
+		}
+	}
+	else 
+	{
+		CurrentStamina += IncreaseStamina * deltaTime;
+		UE_LOG(LogTemp, Warning, TEXT("스테미나 회복중: (%.1f)"), CurrentStamina);
+		if (CurrentStamina > MaxStamina)
+		{
+			CurrentStamina = MaxStamina;
+		}
+	}
+
+}

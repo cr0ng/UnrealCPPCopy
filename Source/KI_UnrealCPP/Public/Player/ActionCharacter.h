@@ -42,6 +42,9 @@ protected:
 	// 걷기 모드 설정
 	void SetWalkMode();
 
+	// 스테미나 설정
+	void SetStamina(float deltaTime);
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Camera")
 	TObjectPtr<class USpringArmComponent> SpringArm = nullptr;
@@ -68,6 +71,30 @@ protected:
 	// 구르기 몽타주
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation|Montage")
 	TObjectPtr<UAnimMontage> RollMontage = nullptr;
+
+	// Max 스테미너
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player|State")
+	float MaxStamina = 50.0f;
+
+	// 스테미너 뛸 때 감소 폭
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player|State")
+	float DecreaseSprintStamina = 10.0f;
+
+	// 스테미너 구르기 때 감소 폭
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player|State")
+	float DecreaseRollStamina = 5.0f;
+
+	// 남은 스테미너
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player|State")
+	float CurrentStamina;
+
+	// Sprint키 눌렸는지 아닌지
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player|State")
+	bool BIsSprint = false;
+
+	// 스테미너 회복 폭
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player|State")
+	float IncreaseStamina = 1.0f;
 
 private:
 	UPROPERTY()
