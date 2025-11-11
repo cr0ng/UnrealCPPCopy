@@ -23,8 +23,8 @@ AActionCharacter::AActionCharacter()
 	PlayerCamera->SetupAttachment(SpringArm);
 	PlayerCamera->SetRelativeRotation(FRotator(-20.0f, 0.0f, 0.0f));
 
-	bUseControllerRotationYaw = true;	// 컨트롤러의 Yaw회전을 사용함 -> 컨트롤러의 Yaw 회전을 캐릭터에 적용
-
+	bUseControllerRotationYaw = false;	// 컨트롤러의 Yaw회전을 사용 안함
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0, 360, 0);
 }
 
@@ -51,6 +51,14 @@ void AActionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	if (enhanced)	// 입력 컴포넌트가 향상된 입력 컴포넌트일 때 
 	{
 		enhanced->BindAction(IA_Move, ETriggerEvent::Triggered, this, &AActionCharacter::OnMoveInput);
+		enhanced->BindActionValueLambda(IA_Sprint, ETriggerEvent::Started,
+			[this](const FInputActionValue& _) {
+				SetSprintMode();
+			});
+		enhanced->BindActionValueLambda(IA_Sprint, ETriggerEvent::Completed,
+			[this](const FInputActionValue& _) {
+				SetWalkMode();
+			});
 	}
 }
 
@@ -76,5 +84,17 @@ void AActionCharacter::OnMoveInput(const FInputActionValue& InValue)
 	//
 	//AddMovementInput(ForwardDirection, inputDirection.Y);
 	//AddMovementInput(RightDirection, inputDirection.X);
+}
+
+void AActionCharacter::SetSprintMode()
+{
+	//UE_LOG(LogTemp, Warning, TEXT("달리기 모드"));
+	GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+}
+
+void AActionCharacter::SetWalkMode()
+{
+	//UE_LOG(LogTemp, Warning, TEXT("걷기 모드"));
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
