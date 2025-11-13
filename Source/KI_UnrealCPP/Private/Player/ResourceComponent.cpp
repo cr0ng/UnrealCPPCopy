@@ -67,6 +67,8 @@ void UResourceComponent::StaminaAutoRegenCoolTimerSet()
 	FTimerManager& timerManager = world->GetTimerManager();
 
 	//GetWorldTimerManager().ClearTimer(StaminaCoolTimer);	// 해서 나쁠 것은 없음(SetTimer할 때 이미 내부적으로 처리하고 있다)
+
+	timerManager.ClearTimer(StaminaRegenTickTimer);	// 쿨이 새로 시작되면 지속 회복 시키던 것 취소하기
 	timerManager.SetTimer(
 		StaminaAutoRegenCoolTimer,
 		[this]() {
