@@ -75,6 +75,7 @@ void AActionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 			});
 		enhanced->BindAction(IA_Roll, ETriggerEvent::Triggered, this, &AActionCharacter::OnRollInput);
 		enhanced->BindAction(IA_Attack, ETriggerEvent::Triggered, this, &AActionCharacter::OnAttackInput);
+		enhanced->BindAction(IA_AttackTest, ETriggerEvent::Triggered, this, &AActionCharacter::OnAttackTestInput);
 	}
 }
 
@@ -120,6 +121,24 @@ void AActionCharacter::OnAttackInput(const FInputActionValue& InValue)
 			Resource->AddStamina(-AttackStaminaCost);	// 스태미너 감소
 		}
 		else if (AnimInstance->GetCurrentActiveMontage() == AttackMontage)	// 몽타주가 재생 중인데, AttackMontage가 재생중이면
+		{
+			// 콤보 공격
+			SectionJumpForCombo();
+		}
+	}
+}
+
+void AActionCharacter::OnAttackTestInput(const FInputActionValue& InValue)
+{
+	if (AnimInstance.IsValid() && Resource->HasEnoughStamina(AttackStaminaCost))	// 애님 인스턴스가 있고 스태미너도 충분할 때
+	{
+		if (!AnimInstance->IsAnyMontagePlaying())	// 몽타주가 재생 중이 아닐 때
+		{
+			// 첫 번째 공격
+			PlayAnimMontage(AttackTestMontage);
+			Resource->AddStamina(-AttackStaminaCost);	// 스태미너 감소
+		}
+		else if (AnimInstance->GetCurrentActiveMontage() == AttackTestMontage)	// 몽타주가 재생 중인데, AttackMontage가 재생중이면
 		{
 			// 콤보 공격
 			SectionJumpForCombo();

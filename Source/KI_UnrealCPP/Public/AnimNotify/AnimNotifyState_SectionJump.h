@@ -28,7 +28,7 @@ public:
 	inline FName GetNextSectionName() const { return NextSectionName; }
 	
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SetctionJump")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SectionJump")
 	FName NextSectionName;
 
 private:

@@ -50,6 +50,7 @@ protected:
 
 	// 공격 입력 받기
 	void OnAttackInput(const FInputActionValue& InValue);
+	void OnAttackTestInput(const FInputActionValue& InValue);
 
 	// 달리기 모드 설정
 	void SetSprintMode();
@@ -82,6 +83,8 @@ protected:
 	TObjectPtr<UInputAction> IA_Roll = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_Attack = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> IA_AttackTest = nullptr;
 
 	// 달리기 속도
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player|Movement")
@@ -97,6 +100,10 @@ protected:
 	// 공격 몽타주
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation|Montage")
 	TObjectPtr<UAnimMontage> AttackMontage = nullptr;
+
+	// 공격(Test) 몽타주
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation|Montage")
+	TObjectPtr<UAnimMontage> AttackTestMontage = nullptr;
 
 	// 달리기 상태일 때 초당 스태미너 비용
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player|Resource")

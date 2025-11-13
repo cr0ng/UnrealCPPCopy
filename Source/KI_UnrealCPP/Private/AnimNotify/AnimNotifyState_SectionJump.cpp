@@ -22,7 +22,7 @@ void UAnimNotifyState_SectionJump::NotifyEnd(USkeletalMeshComponent* MeshComp, U
 	if (OwnerCharacter.IsValid())
 	{
 		// OwnerCharacter 설정 해제
-		OwnerCharacter->SetSectionJumpNotify(nullptr );
+		OwnerCharacter->SetSectionJumpNotify(nullptr);
 		OwnerCharacter = nullptr;
 	}
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
