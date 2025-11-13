@@ -30,26 +30,6 @@ void UResourceComponent::BeginPlay()
 void UResourceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// 내가 시간 누적을 직접 하는 경우
-	//TimeSinceLastStaminaUse += DeltaTime;
-	//if (TimeSinceLastStaminaUse > StaminaRegenCoolTime && CurrentStamina <= MaxStamina)
-	//{
-	//	CurrentStamina = FMath::Min(CurrentStamina + StaminaRegenAmount * DeltaTime, MaxStamina);
-	//	UE_LOG(LogTemp, Warning, TEXT("Stamina Regen : %.1f"), CurrentStamina);
-	//}
-
-	// 타이머로 조건만 설정하는 경우
-	//if (bRegenStamina)
-	//{
-	//	CurrentStamina += StaminaRegenAmount * DeltaTime;
-	//	if (CurrentStamina > MaxStamina)
-	//	{
-	//		bRegenStamina = false;
-	//		CurrentStamina = MaxStamina;
-	//	}
-	//	UE_LOG(LogTemp, Warning, TEXT("Stamina Regen : %.1f"), CurrentStamina);
-	//}
 }
 
 void UResourceComponent::AddHealth(float InValue)
@@ -92,13 +72,18 @@ void UResourceComponent::StaminaAutoRegenCoolTimerSet()
 		[this]() {
 			//bRegenStamina = true;
 			UE_LOG(LogTemp, Log, TEXT("리젠 타이머 실행"));
+			 
+			// StaminaRegenTickTimer 핸들에 연결될 타이머 세팅
+			//		StaminaTickInterval초를 첨에 한 번 기다리고,
+			//		StaminaTickInterval 시간 간격으로
+			//		이 클래스의 StaminaRegenPerTick 함수를 실행하는 타이머) 
 
 			UWorld* world = GetWorld();
 			FTimerManager& timerManager = world->GetTimerManager();
 			timerManager.SetTimer(
-				StaminaRegenTickTimer,
+				StaminaRegenTickTimer,	// StaminaAutoRegenCoolTimer 핸들에 연결될 타이머 세팅. (StaminaRegenCoolTime 초 후에 한 번만 람다식을 실행하는 타이머)
 				this,
-				&UResourceComponent::StaminaRegenPerTick,
+				&UResourceComponent::StaminaRegenPerTick,	
 				StaminaTickInterval,	// 실행 간격
 				true,	// 반복 재생 여부
 				StaminaTickInterval);	// 첫 딜레이
