@@ -50,6 +50,8 @@ void AActionCharacter::BeginPlay()
 
 	// 게임 진행 중에 자주 변경되는 값은 시작 시점에서 리셋을 해주는 것이 좋다.
 	bIsSprint = false;
+
+	OnActorBeginOverlap.AddDynamic(this, &AActionCharacter::OnGetWeapon);
 }
 
 // Called every frame
@@ -178,6 +180,12 @@ void AActionCharacter::SetWalkMode()
 	//UE_LOG(LogTemp, Warning, TEXT("걷기 모드"));
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	bIsSprint = false;
+}
+
+void AActionCharacter::OnGetWeapon(AActor* OverlappedActor, AActor* OtherActor)
+{
+
+
 }
 
 void AActionCharacter::SectionJumpForCombo()
