@@ -7,6 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Player/ResourceComponent.h"
+#include "Weapon/WeaponActor.h"
 
 // Sets default values
 AActionCharacter::AActionCharacter()
@@ -79,6 +80,16 @@ void AActionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	}
 }
 
+void AActionCharacter::OnAttackEnable(bool bEnable)
+{
+	if (CurrentWeapon.IsValid())
+	{
+		CurrentWeapon->AttackEnable(bEnable);
+	}
+
+
+}
+
 void AActionCharacter::OnMoveInput(const FInputActionValue& InValue)
 {
 	FVector2D inputDirection = InValue.Get<FVector2D>();
@@ -112,10 +123,13 @@ void AActionCharacter::OnRollInput(const FInputActionValue& InValue)
 
 void AActionCharacter::OnAttackInput(const FInputActionValue& InValue)
 {
+	//AWeaponActor* Weapon = GetWorld()->SpawnActor<AWeaponActor>();
 	if (AnimInstance.IsValid() && Resource->HasEnoughStamina(AttackStaminaCost))	// 애님 인스턴스가 있고 스태미너도 충분할 때
 	{
 		if (!AnimInstance->IsAnyMontagePlaying())	// 몽타주가 재생 중이 아닐 때
 		{
+			//Weapon->AttackEnable(true);
+
 			// 첫 번째 공격
 			PlayAnimMontage(AttackMontage);
 			Resource->AddStamina(-AttackStaminaCost);	// 스태미너 감소
@@ -125,18 +139,22 @@ void AActionCharacter::OnAttackInput(const FInputActionValue& InValue)
 			// 콤보 공격
 			SectionJumpForCombo();
 		}
+		//Weapon->AttackEnable(false);
 	}
 }
 
+// 테스트용 우클릭 공격
 void AActionCharacter::OnAttackTestInput(const FInputActionValue& InValue)
 {
 	if (AnimInstance.IsValid() && Resource->HasEnoughStamina(AttackStaminaCost))	// 애님 인스턴스가 있고 스태미너도 충분할 때
 	{
 		if (!AnimInstance->IsAnyMontagePlaying())	// 몽타주가 재생 중이 아닐 때
 		{
+
 			// 첫 번째 공격
 			PlayAnimMontage(AttackTestMontage);
 			Resource->AddStamina(-AttackStaminaCost);	// 스태미너 감소
+
 		}
 		else if (AnimInstance->GetCurrentActiveMontage() == AttackTestMontage)	// 몽타주가 재생 중인데, AttackMontage가 재생중이면
 		{
@@ -172,6 +190,7 @@ void AActionCharacter::SectionJumpForCombo()
 
 		bComboReady = false;		// 중복 실행 방지
 		Resource->AddStamina(-AttackStaminaCost);
+
 	}
 }
 

@@ -9,6 +9,11 @@ void UAnimNotifyState_SectionJump::NotifyBegin(USkeletalMeshComponent* MeshComp,
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 	OwnerCharacter = Cast<AActionCharacter>(MeshComp->GetOwner());
 
+	if (!OwnerCharacter.IsValid())
+	{
+		OwnerCharacter = Cast<AActionCharacter>(MeshComp->GetOwner());
+	}
+
 	if (OwnerCharacter.IsValid())
 	{
 		// OwnerCharacter에 자기 자신을 설정

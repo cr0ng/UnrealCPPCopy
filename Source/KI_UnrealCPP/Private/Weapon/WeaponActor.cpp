@@ -51,13 +51,16 @@ void AWeaponActor::OnWeaponBeginOverlap(AActor* OverlappedActor, AActor* OtherAc
 
 void AWeaponActor::AttackEnable(bool bEnable)
 {
+
 	if(bEnable)
 	{
 		WeaponCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		//UE_LOG(LogTemp, Log, TEXT("AttackEnable QueryOnly "));
 	}
 	else
 	{
 		WeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		//UE_LOG(LogTemp, Log, TEXT("AttackEnable NoCollision "));
 	}
 }
 
